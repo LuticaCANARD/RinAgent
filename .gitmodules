@@ -1,6 +1,6 @@
 [submodule "rin_agent"]
 	path = rin_agent
-	url = .\\rin_agent\\
+	url = https://github.com/LuticaCANARD/rin_agent.git
 [submodule "rin_agent_front"]
 	path = rin_agent_front
-	url = .\\rin_agent_front\\
+	url = https://github.com/LuticaCANARD/rin_agent_front.git
