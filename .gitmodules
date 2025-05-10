@@ -1,0 +1,6 @@
+[submodule "rin_agent"]
+	path = rin_agent
+	url = .\\rin_agent\\
+[submodule "rin_agent_front"]
+	path = rin_agent_front
+	url = .\\rin_agent_front\\
