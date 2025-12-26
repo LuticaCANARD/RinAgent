@@ -1,16 +1,16 @@
 FROM postgres:18
 
-# Install build dependencies
+# Install build dependencies and extensions
 RUN apt-get update && apt-get install -y \
     postgresql-server-dev-18 \
     build-essential \
     git \
     curl \
     ca-certificates \
+    postgresql-plpython3-18 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pgvector
-# Using latest master branch for Postgres 18 compatibility
 RUN git clone https://github.com/pgvector/pgvector.git \
     && cd pgvector \
     && make \

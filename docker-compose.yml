@@ -8,7 +8,7 @@ services:
       - valkey_data:/bitnami/valkey/data # For persisting data
     environment:
       - VALKEY_AOF_ENABLED=yes # Enable AOF persistence, or set to 'no' to disable
-      - VALKEY_PASSWORD=yourpassword # Set a password for Valkey
+      - VALKEY_PASSWORD=${VALKEY_PASSWORD} # Set a password for Valkey
     restart: always
     networks:
       - app_network
@@ -18,9 +18,9 @@ services:
       dockerfile: docker/postgres.dockerfile
     container_name: rin_postgres
     environment:
-      POSTGRES_USER: user_name
-      POSTGRES_PASSWORD: supersecretpassword
-      POSTGRES_DB: rin_agent_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
