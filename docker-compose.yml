@@ -1,16 +1,21 @@
 services:
-  rin_redis:
-    image: redis:latest
-    container_name: rin_redis
+  rin_valkey:
+    image: valkey/valkey-bundle:latest # Or specify a version like 8.1-bookworm
+    container_name: rin_valkey
     ports:
       - "6379:6379"
     volumes:
-      - rin_redis_data:/data
+      - valkey_data:/bitnami/valkey/data # For persisting data
+    environment:
+      - VALKEY_AOF_ENABLED=yes # Enable AOF persistence, or set to 'no' to disable
+      - VALKEY_PASSWORD=yourpassword # Set a password for Valkey
     restart: always
     networks:
       - app_network
   rin_postgres:
-    image: postgres:17
+    build:
+      context: .
+      dockerfile: docker/postgres.dockerfile
     container_name: rin_postgres
     environment:
       POSTGRES_USER: user_name
@@ -19,30 +24,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - rin_pg_data:/var/lib/postgresql/data
+      - rin_pg_data:/var/lib/postgresql/18/data
     restart: always
     networks:
       - app_network
-  # rust_server:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: rust_server
-  #   ports:
-  #     - "8080:8080" # External debug connection
-  #   environment:
-  #     REDIS_HOST: redis
-  #     POSTGRES_HOST: postgres
-  #   depends_on:
-  #     - redis
-  #     - postgres
-  #   networks:
-  #     - app_network
-  #   restart: always
-
 volumes:
-  rin_redis_data: 
   rin_pg_data: 
+  valkey_data:
 
 networks:
   app_network:
