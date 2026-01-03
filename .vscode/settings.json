@@ -1,6 +1,6 @@
 {
-    "yaml.schemas": {
-        "https://www.artillery.io/schema.json": []
-    },
-    "editor.tabSize": 2
+  "yaml.schemas": {
+    "https://www.artillery.io/schema.json": []
+  },
+  "editor.tabSize": 2
 }
