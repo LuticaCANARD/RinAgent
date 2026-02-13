@@ -28,6 +28,35 @@ services:
     restart: always
     networks:
       - app_network
+  rin_agent:
+    build:
+      context: .
+      dockerfile: docker/backend.dockerfile
+    container_name: rin_agent
+    depends_on:
+      rin_postgres:
+        condition: service_started
+      rin_valkey:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@rin_postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${VALKEY_PASSWORD}@rin_valkey:6379
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MANAGER_ID=${MANAGER_ID}
+      - RUST_LOG=${RUST_LOG:-info}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 volumes:
   rin_pg_data: 
   valkey_data:
