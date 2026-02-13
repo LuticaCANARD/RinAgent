@@ -1,2 +1,8 @@
 # RinAgent
-- 유저의 눈과 귀를 즐겁게 해주는 봇
+
+## How to install
+- first, `git clone`
+- then, `git submodule update --init`
+
+### or
+- `git clone --recursive`
