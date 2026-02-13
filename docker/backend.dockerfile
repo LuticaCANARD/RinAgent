@@ -1,4 +1,14 @@
-# 빌드 스테이지
+# 프론트엔드 빌드 스테이지
+FROM node:lts as frontend-builder
+
+WORKDIR /app
+COPY rin_agent_front ./rin_agent_front
+
+WORKDIR /app/rin_agent_front
+RUN npm install
+RUN npm run build
+
+# Rust 백엔드 빌드 스테이지
 FROM rust:latest as builder
 
 WORKDIR /app
@@ -9,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
+
+# 프론트엔드 빌드 결과 복사
+COPY --from=frontend-builder /app/rin_agent_front/build ./rin_agent/rin_agent/static
 
 # rin_agent 바이너리 빌드
 RUN cargo build --release -p rin_agent
@@ -27,8 +40,8 @@ RUN apt-get update && apt-get install -y \
 # 빌드된 바이너리 복사
 COPY --from=builder /app/target/release/rin_agent /usr/local/bin/rin_agent
 
-# 필요한 정적 파일 복사 (있을 경우)
-COPY rin_agent/rin_agent/static /app/static
+# 프론트엔드 정적 파일 복사
+COPY --from=builder /app/rin_agent/rin_agent/static /app/static
 
 # 포트 설정
 EXPOSE 8000
